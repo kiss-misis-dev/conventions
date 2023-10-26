@@ -6,6 +6,8 @@
 
 `state` - состояние объекта `game`.
 
+`event` - "стрелка" в графе состояний объекта `game`
+
 ### Возможные состояния
 
 - before:
@@ -14,12 +16,53 @@
   - `registration closed`
 - in progress:
   - `play` - дефолтное состояние игры, когда ведущий шутейку шутит или правила рассказывает.
-  - `round` - внимание, вопрос!
   - `pause` - перерыв на обед
+  - `round` - внимание, вопрос!
   - `verify` - время аппеляций
 - after:
   - `unconfirmed` - проверка результатов
   - `closed` - игра завершена! поздравляю, товарищи!
+
+### Определение эвентов
+
+- `open registration`: `scheduled` -> `registration open`
+- `close registration`: `registration open` -> `registration closed`
+- `start game`: `registration closed` -> `play`
+- `stop game`: `play` -> `pause`
+- `resume game`: `pause` -> `play`
+- `start round`: `play` -> `round`
+- `end round`: `round` -> `play`
+- `start verification`: `play` -> `verify`
+- `end verification`: `verify` -> `play`
+- `end game`: `play` -> `unconfirmed`
+- `confirm`: `unconfirmed` -> `closed`
+
+### Граф состояний
+
+```mermaid
+stateDiagram-v2
+  state "scheduled" as be1
+  state "registration open" as be2
+  state "registration closed" as be3
+  state "play" as ip1
+  state "pause" as ip2
+  state "round" as ip3
+  state "verify" as ip4
+  state "unconfirmed" as af1
+  state "closed" as af2
+
+  be1 --> be2: open registration
+  be2 --> be3: close registration
+  be3 --> ip1: start game
+  ip1 --> ip2: stop game
+  ip2 --> ip1: resume game
+  ip1 --> ip3: start round
+  ip3 --> ip1: end round
+  ip1 --> ip4: start verification
+  ip4 --> ip1: end verification
+  ip1 --> af1: end game
+  af1 --> af2: confirm
+```
 
 ## Components
 
