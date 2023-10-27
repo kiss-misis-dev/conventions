@@ -64,6 +64,62 @@ stateDiagram-v2
   af1 --> af2: confirm
 ```
 
+### Game components
+
+```golang
+struct Member {
+  id int
+  commands map[Command.id, Command*]
+}
+
+struct Command {
+  id int
+  members map[Member.id, Member*]
+}
+
+func attach_member(command Command*, member Member*);
+func remove_member(command Command*, member Memebr.id);
+
+interface Problem {
+  situation object
+}
+
+struct Round {
+  problems list[Problem]
+  representation object
+}
+
+func create_problem(situation object, round Round*);
+
+struct Game {
+  commands map[Command.id, Command*]
+  rounds list[Round]
+  points map[commands x rounds, unsigned integer]
+}
+
+func register_command(game Game*, command Command*);
+func unregister_command(game Game*, command Command*);
+func create_round(game Game*, represenation object);
+func set_points(game Game*, round iterator, command Command*, points unsigned integer);
+
+interface GameStateMachine {
+  game Game
+  state enum[game states]
+}
+
+func game_event(event enum[game events])
+
+struct Global {
+  members list[Member]
+  commands list[Command]
+  games list[GameStateMachine]
+}
+
+func create_member();
+func create_command();
+func create_game();
+```
+
 ## Components
 
 ### Global
